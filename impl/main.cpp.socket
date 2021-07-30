@@ -1,0 +1,55 @@
+/*************************************************************************
+    > File Name: impl/main.cpp
+    > Author: Frank Lu
+    > Mail: lufengfrank@didichuxing.com
+    > Created Time: Tue 15 Sep 2015 07:45:32 PM CST
+    > Utility: 
+ ************************************************************************/
+
+#include "socketConn.h"
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	socketConn sc;
+	bool r = false;
+	r = sc.serverListen(9988);
+	if(!r)
+		cout<<"Listen error\n";
+	r = false;
+
+	//server
+	while(!r)
+	{
+	
+		r = sc.serverFetchConnection();
+	
+		if(!r)
+			cout<<"Connection not fetch\n";
+		else
+		{
+			char buff[1024];
+			int revLen = 0;
+			r = sc.serverReveiceData(buff, revLen);
+			if(r)
+			{
+				cout<<buff<<", length:"<<revLen<<endl;
+				r = false;//continue
+			}
+			else
+			{
+				cout<<"data not received\n";
+				r = true;//exit
+			}
+		}
+	}
+
+	/*
+	//client
+	sc.clientConnect("127.0.0.1", 9988);
+	sc.clientSendData("lftcai");
+	*/
+
+	return 1;
+}
